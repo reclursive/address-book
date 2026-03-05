@@ -1,15 +1,26 @@
 from django.shortcuts import render, redirect
-from .models import Contact
+from .models import Contact, Email
 from .forms import ContactForm
+
 
 def address_book_view(request):
 
     if request.method == "POST":
+
         form = ContactForm(request.POST)
 
         if form.is_valid():
-            form.save()  # saves to SQLite
-            return redirect('address_book')
+            contact = form.save()
+
+            email_value = request.POST.get("email")
+
+            if email_value:
+                Email.objects.create(
+                    contact=contact,
+                    email=email_value
+                )
+
+            return redirect("address_book")
 
     else:
         form = ContactForm()
@@ -20,5 +31,3 @@ def address_book_view(request):
         "form": form,
         "contacts": contacts
     })
-    
-    form.save()
