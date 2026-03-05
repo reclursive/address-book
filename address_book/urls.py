@@ -1,8 +1,6 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from . import views 
 
 urlpatterns = [
-    path("", views.address_book, name="address_book"),
-    
+    path('', views.address_book_view, name='address_book'),  
 ]

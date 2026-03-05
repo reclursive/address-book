@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Address Book</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#f4f6f9;
+display:flex;
+height:100vh;
+}
+
+/* Soft blue sweetheart cute w hover */
+
+:root{
+--primary-blue:#4a90e2;
+--primary-blue-hover:#357ab8;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:260px;
+background:white;
+border-right:1px solid #ddd;
+padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+.sidebar-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.sidebar-header h2{
+font-size:18px;
+letter-spacing:1px;
+margin:0;
+}
+
+/* Contacts */
+
+.contact{
+display:flex;
+align-items:center;
+padding:8px;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:10px;
+}
+
+.contact:hover{
+background:#f1f4f8;
+}
+
+.contact-circle{
+width:34px;
+height:34px;
+border-radius:50%;
+background:var(--primary-blue);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+margin-right:10px;
+}
+
+.contact-name{
+font-size:14px;
+}
+
+/* Circle + button */
+
+.circle-plus{
+width:34px;
+height:34px;
+border-radius:50%;
+background:var(--primary-blue);
+border:none;
+position:relative;
+cursor:pointer;
+box-shadow:0 2px 4px rgba(0,0,0,0.15);
+}
+
+.circle-plus:hover{
+background:var(--primary-blue-hover);
+}
+
+.circle-plus::before,
+.circle-plus::after{
+content:"";
+position:absolute;
+background:white;
+}
+
+.circle-plus::before{
+top:50%;
+left:25%;
+right:25%;
+height:2px;
+transform:translateY(-50%);
+}
+
+.circle-plus::after{
+left:50%;
+top:25%;
+bottom:25%;
+width:2px;
+transform:translateX(-50%);
+}
+
+/*form */
+
+.main{
+flex:1;
+padding:40px;
+position:relative;
+display:flex;
+flex-direction:column;
+}
+
+/* names -inputs */
+
+.name-row{
+display:flex;
+gap:12px;
+margin-bottom:15px;
+}
+
+.name-row input{
+flex:1;
+padding:12px;
+border-radius:6px;
+border:1px solid #ccc;
+background:#f6f6f6;
+font-size:14px;
+}
+
+.name-row input::placeholder{
+color:#aaa;
+}
+
+/* email  */
+
+.add-email-container{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+}
+
+.add-email-container input{
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+background:#f6f6f6;
+}
+
+.add-email-label{
+font-size:12px;
+color:var(--primary-blue);
+font-weight:500;
+}
+
+/* bottom btns */
+
+.action-buttons{
+position:absolute;
+bottom:30px;
+left:40px;
+right:40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+/* deletion */
+
+.delete-btn{
+background:#e74c3c;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.delete-btn:hover{
+background:#c0392b;
+}
+
+/* Right button group */
+
+.right-buttons{
+display:flex;
+gap:10px;
+}
+
+/* Cancel (maybe unecessary, user story ) */
+
+.cancel-btn{
+background:rgba(255,255,255,0.6);
+border:1px solid #ddd;
+color:#333;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+backdrop-filter:blur(4px);
+}
+
+.cancel-btn:hover{
+background:rgba(255,255,255,0.9);
+}
+
+/* Save */
+
+.save-btn{
+background:var(--primary-blue);
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.save-btn:hover{
+background:var(--primary-blue-hover);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Adjacent sidebar area-->
+
+<div class="sidebar">
+
+<div class="sidebar-header">
+<h2>CONTACTS</h2>
+<button class="circle-plus"></button>
+</div>
+
+{% for contact in contacts %}
+
+<div class="contact">
+
+<div class="contact-circle">
+{{ contact.first_name|slice:":1" }}{{ contact.last_name|slice:":1" }}
+</div>
+
+<div class="contact-name">
+{{ contact.first_name }} {{ contact.last_name }}
+</div>
+
+</div>
+
+{% empty %}
+
+<p>No contacts yet.</p>
+
+{% endfor %}
+
+</div>
+
+<!-- SQLITE FORM ENTER W CSRF -->
+
+<form method="POST" class="main">
+
+{% csrf_token %}
+
+<div class="name-row">
+{{ form.first_name }}
+{{ form.last_name }}
+</div>
+
+<div class="add-email-container">
+
+{{ form.email }}
+
+<button type="submit" class="circle-plus"></button>
+
+<span class="add-email-label">Add Email</span>
+
+</div>
+
+<div class="action-buttons">
+
+<button type="button" class="delete-btn">Delete</button>
+
+<div class="right-buttons">
+
+<button type="button" class="cancel-btn">Cancel</button>
+
+<button type="submit" class="save-btn">Save</button>
+
+</div>
+
+</div>
+
+</form>
+
+</body>
+</html>
