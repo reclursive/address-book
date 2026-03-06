@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'address_book_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'address_book_project.wsgi.application'
 
 
 # Database
@@ -80,8 +80,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
-    "default": dj_database_url.config(default=os.environ.get("postgresql://address_book_db_c20t_user:nEqhk0dN0ABokKfNqWBlW8NiRp6C3iiC@dpg-d6l5das50q8c73bmo1rg-a/address_book_db_c20t"))
-}
+    "default": dj_database_url.config(
+        default=os.environ.get("postgresql://address_book_db_c20t_user:nEqhk0dN0ABokKfNqWBlW8NiRp6C3iiC@dpg-d6l5das50q8c73bmo1rg-a/address_book_db_c20t")
+    )}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
