@@ -234,7 +234,7 @@ body{
 <div class="sidebar">
   <div class="sidebar-header">
     <h2>CONTACTS</h2>
-      <button type="reset" form="contact-form" class="circle-plus" title="New Contact"></button>
+    <button type="submit" name="clear_form" class="circle-plus" title="New Contact"></button>
   </div>
 
   {% for contact in contacts %}
@@ -284,7 +284,7 @@ body{
     {% endif %}
     <div class="right-buttons">
       <!-- Clear form button -->
-      <button type="reset" class="cancel-btn">Clear Form</button>
+    <button type="submit" name="clear_form" class="cancel-btn">Clear Form</button>
       <!-- Save button creates a new contact -->
       <button type="submit" name="save_contact" class="save-btn">Save</button>
     </div>

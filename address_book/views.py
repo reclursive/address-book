@@ -17,6 +17,9 @@ def address_book_view(request, contact_id=None):
 
     if request.method == "POST":
 
+        # ---- CLEAR FORM ----
+        if "clear_form" in request.POST:
+            return redirect("address_book")  # resets the form and unselects any contact
         # ---- CLEARING THE FORM COMPLETELY ----
         if "clear_form" in request.POST:
             return redirect("address_book")
