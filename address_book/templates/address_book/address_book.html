@@ -18,7 +18,7 @@ body{
   --primary-blue-hover:#357ab8;
 }
 
-/* adjacent sidebar area */
+/* Sidebar adjacent area */
 .sidebar{
   width:260px;
   background:white;
@@ -41,7 +41,6 @@ body{
   margin:0;
 }
 
-/* Contacts */
 .contact{
   display:flex;
   align-items:center;
@@ -49,6 +48,8 @@ body{
   border-radius:8px;
   cursor:pointer;
   margin-bottom:10px;
+  text-decoration:none;
+  color:inherit;
 }
 
 .contact:hover{
@@ -72,15 +73,65 @@ body{
   font-size:14px;
 }
 
-/* multiple emails displayy */
-.contact-emails{
-  margin-left:44px;
-  font-size:12px;
-  color:#666;
-  margin-top:4px;
+/* form */
+.main{
+  flex:1;
+  padding:40px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
 }
 
-/* Circle + addition btns */
+/* both names */
+.name-row{
+  display:flex;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.name-row input{
+  flex:1;
+  padding:12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  background:#f6f6f6;
+  font-size:14px;
+}
+
+.name-row input::placeholder{
+  color:#aaa;
+}
+
+/*emails list */
+.contact-emails{
+  margin-bottom:20px;
+  font-size:12px;
+  color:#666;
+  margin-left:4px;
+}
+
+/* Additional email btn */
+.add-email-container{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.add-email-container input{
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  background:#f6f6f6;
+}
+
+.add-email-label{
+  font-size:12px;
+  color:var(--primary-blue);
+  font-weight:500;
+}
+
+/* Circle + addition btn */
 .circle-plus{
   width:34px;
   height:34px;
@@ -119,55 +170,7 @@ body{
   transform:translateX(-50%);
 }
 
-/* form */
-.main{
-  flex:1;
-  padding:40px;
-  position:relative;
-  display:flex;
-  flex-direction:column;
-}
-
-.name-row{
-  display:flex;
-  gap:12px;
-  margin-bottom:15px;
-}
-
-.name-row input{
-  flex:1;
-  padding:12px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  background:#f6f6f6;
-  font-size:14px;
-}
-
-.name-row input::placeholder{
-  color:#aaa;
-}
-
-.add-email-container{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.add-email-container input{
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  background:#f6f6f6;
-}
-
-.add-email-label{
-  font-size:12px;
-  color:var(--primary-blue);
-  font-weight:500;
-}
-
-/* Bottm btns */
+/* Bottm btnsss */
 .action-buttons{
   position:absolute;
   bottom:30px;
@@ -229,66 +232,63 @@ body{
 
 <!-- Sidebar -->
 <div class="sidebar">
-
-<div class="sidebar-header">
-<h2>CONTACTS</h2>
-<button class="circle-plus"></button>
-</div>
-
-{% for contact in contacts %}
-
-<div class="contact">
-
-  <div class="contact-circle">
-    {{ contact.first_name|slice:":1" }}{{ contact.last_name|slice:":1" }}
+  <div class="sidebar-header">
+    <h2>CONTACTS</h2>
+    <button class="circle-plus" title="New Contact"></button>
   </div>
 
-  <div class="contact-name">
-    {{ contact.first_name }} {{ contact.last_name }}
-  </div>
-
-</div>
-
-<div class="contact-emails">
-  {% for email in contact.emails.all %}
-    <div>{{ email.email }}</div>
+  {% for contact in contacts %}
+    <a href="{% url 'contact_detail' contact.id %}" class="contact">
+      <div class="contact-circle">{{ contact.first_name|slice:":1" }}{{ contact.last_name|slice:":1" }}</div>
+      <div class="contact-name">{{ contact.first_name }} {{ contact.last_name }}</div>
+    </a>
+  {% empty %}
+    <p>No contacts yet.</p>
   {% endfor %}
 </div>
 
-{% empty %}
-<p>No contacts yet.</p>
-{% endfor %}
+<!-- form (in the center area) -->
+<form id="contact-form" method="POST" class="main">
+  {% csrf_token %}
 
-</div>
+  {% if selected_contact %}
+    <input type="hidden" name="contact_id" value="{{ selected_contact.id }}">
+  {% endif %}
 
-<!-- Main Form -->
-<form method="POST" class="main">
-
-{% csrf_token %}
-
-<div class="name-row">
-  {{ form.first_name }}
-  {{ form.last_name }}
-</div>
-
-<div class="add-email-container">
-  <input type="email" name="email" placeholder="Email">
-  <button type="submit" name="add_email" class="circle-plus"></button>
-  <span class="add-email-label">Add Email</span>
-</div>
-
-<div class="action-buttons">
-
-  <button type="button" class="delete-btn">Delete</button>
-
-  <div class="right-buttons">
-    <button type="reset" class="cancel-btn">Cancel</button>
-    <button type="submit" name="save_contact" class="save-btn">Save</button>
+  <!-- names -->
+  <div class="name-row">
+    {{ form.first_name }}
+    {{ form.last_name }}
   </div>
 
-</div>
+  <!-- Displaying all contact's  existing emails -->
+  <div class="contact-emails">
+    {% for email in emails %}
+      <div>{{ email.email }}</div>
+    {% endfor %}
+  </div>
 
+  <!-- new email to selected contact-->
+  <div class="add-email-container">
+    <input type="email" name="email" placeholder="New Email">
+    {% if selected_contact %}
+      <button type="submit" name="add_email" class="circle-plus"></button>
+      <span class="add-email-label">Add Email</span>
+    {% endif %}
+  </div>
+
+  <!-- action btns -->
+  <div class="action-buttons">
+    {% if selected_contact %}
+      <button type="submit" name="delete_contact" class="delete-btn">Delete</button>
+    {% endif %}
+    <div class="right-buttons">
+      <!-- Clear form button -->
+      <button type="reset" class="cancel-btn">Clear Form</button>
+      <!-- Save button creates a new contact -->
+      <button type="submit" name="save_contact" class="save-btn">Save</button>
+    </div>
+  </div>
 </form>
 
 </body>
-</html>
