@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from address_book.models import Contact, Email
 
 
 def main():

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +28,7 @@ SECRET_KEY = 'django-insecure-wmv$$^q=er&(aukc3=*%5mbwpfdh2f4^+wbuf@ck34fq^m4xr2
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
 
 # Application definition
 
@@ -52,12 +55,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-
-
-ROOT_URLCONF = 'address_book_project.urls'
-WSGI_APPLICATION = 'address_book_project.wsgi.application'
-
-
+ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -74,18 +72,16 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# postgresql://address_book_db_c20t_user:nEqhk0dN0ABokKfNqWBlW8NiRp6C3iiC@dpg-d6l5das50q8c73bmo1rg-a/address_book_db_c20t
+
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(default=os.environ.get("postgresql://address_book_db_c20t_user:nEqhk0dN0ABokKfNqWBlW8NiRp6C3iiC@dpg-d6l5das50q8c73bmo1rg-a/address_book_db_c20t"))
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

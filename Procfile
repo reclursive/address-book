@@ -1,0 +1,1 @@
+web: gunicorn address_book_project.wsgi:application
