@@ -2,11 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from address_book.models import Contact, Email
-
 
 def main():
     """Run administrative tasks."""
+    # Ensure Django knows which settings to use
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'address_book_project.settings')
     try:
         from django.core.management import execute_from_command_line
