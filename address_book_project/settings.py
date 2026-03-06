@@ -57,6 +57,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'address_book_project.urls'
 WSGI_APPLICATION = 'address_book_project.wsgi.application'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
