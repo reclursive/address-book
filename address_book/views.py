@@ -16,21 +16,27 @@ def address_book_view(request, contact_id=None):
         form = ContactForm()
 
     if request.method == "POST":
+
+        # ---- CLEARING THE FORM COMPLETELY ----
+        if "clear_form" in request.POST:
+            return redirect("address_book")
+
         # ---- Saving current contact section----
-        if "save_contact" in request.POST:
-            # Binding from the form with POSTr response data
-            form = ContactForm(request.POST)
-            
+        elif "save_contact" in request.POST:
+            # Binding form with POST response data
+            # If editing, bind to existing contact instance
+            form = ContactForm(request.POST, instance=selected_contact)
+
             if form.is_valid():
-                # Saving the contact (creates new Contact object)
+                # Saving the contact (creates or updates Contact object)
                 contact = form.save()
-                
+
                 # Checking if an email was entered
-                email_value = request.POST.get('email')
+                email_value = request.POST.get("email")
                 if email_value:
                     # Creating a little email object linked to this contact
                     Email.objects.create(contact=contact, email=email_value)
-                
+
                 # Redirect to avoid resubmission and go to contact detail page
                 return redirect("contact_detail", contact_id=contact.id)
 
@@ -38,19 +44,23 @@ def address_book_view(request, contact_id=None):
         elif "add_email" in request.POST:
             email_value = request.POST.get("email")
             contact_id_post = request.POST.get("contact_id")
+
             if contact_id_post and email_value:
                 contact = get_object_or_404(Contact, id=contact_id_post)
                 Email.objects.create(contact=contact, email=email_value)
+
             return redirect("contact_detail", contact_id=contact_id_post)
-                
+
         # ---- DELETING CONTACT ----
         elif "delete_contact" in request.POST:
             contact_id_post = request.POST.get("contact_id")
+
             if contact_id_post:
                 contact = get_object_or_404(Contact, id=contact_id_post)
                 contact.delete()
+
             return redirect("address_book")
-        
+
     # Get all contacts for adjacent sidebar
     contacts = Contact.objects.all().order_by("first_name", "last_name")
 
