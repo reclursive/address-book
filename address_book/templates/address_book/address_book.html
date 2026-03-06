@@ -234,7 +234,7 @@ body{
 <div class="sidebar">
   <div class="sidebar-header">
     <h2>CONTACTS</h2>
-    <button class="circle-plus" title="New Contact"></button>
+      <button type="reset" form="contact-form" class="circle-plus" title="New Contact"></button>
   </div>
 
   {% for contact in contacts %}
@@ -261,7 +261,7 @@ body{
     {{ form.last_name }}
   </div>
 
-  <!-- Displaying all contact's  existing emails -->
+  <!-- Displaying all contact's existing emails -->
   <div class="contact-emails">
     {% for email in emails %}
       <div>{{ email.email }}</div>

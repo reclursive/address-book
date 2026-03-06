@@ -16,16 +16,25 @@ def address_book_view(request, contact_id=None):
         form = ContactForm()
 
     if request.method == "POST":
-
-        # ->save
+        # ---- Saving current contact section----
         if "save_contact" in request.POST:
+            # Binding from the form with POSTr response data
             form = ContactForm(request.POST)
+            
             if form.is_valid():
-                new_contact = form.save()
-                return redirect("contact_detail", contact_id=new_contact.id)
+                # Saving the contact (creates new Contact object)
+                contact = form.save()
+                
+                # Checking if an email was entered
+                email_value = request.POST.get('email')
+                if email_value:
+                    # Creating a little email object linked to this contact
+                    Email.objects.create(contact=contact, email=email_value)
+                
+                # Redirect to avoid resubmission and go to contact detail page
+                return redirect("contact_detail", contact_id=contact.id)
 
-        # ->add email to just the currently selected contact
-
+        # ---- ADDING AN ADDITIONAL EMAIL TO JUST SELECTED CONTACT ----
         elif "add_email" in request.POST:
             email_value = request.POST.get("email")
             contact_id_post = request.POST.get("contact_id")
@@ -33,15 +42,16 @@ def address_book_view(request, contact_id=None):
                 contact = get_object_or_404(Contact, id=contact_id_post)
                 Email.objects.create(contact=contact, email=email_value)
             return redirect("contact_detail", contact_id=contact_id_post)
-
-        # ->remove contact all together
+                
+        # ---- DELETING CONTACT ----
         elif "delete_contact" in request.POST:
             contact_id_post = request.POST.get("contact_id")
             if contact_id_post:
                 contact = get_object_or_404(Contact, id=contact_id_post)
                 contact.delete()
             return redirect("address_book")
-
+        
+    # Get all contacts for adjacent sidebar
     contacts = Contact.objects.all().order_by("first_name", "last_name")
 
     return render(
