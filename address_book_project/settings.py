@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,7 +52,11 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+
+
+ROOT_URLCONF = 'address_book_project.urls'
+WSGI_APPLICATION = 'address_book_project.wsgi.application'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
