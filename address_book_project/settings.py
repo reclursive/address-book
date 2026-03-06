@@ -80,8 +80,8 @@ WSGI_APPLICATION = 'address_book_project.wsgi.application'
 
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("postgresql://address_book_db_c20t_user:nEqhk0dN0ABokKfNqWBlW8NiRp6C3iiC@dpg-d6l5das50q8c73bmo1rg-a/address_book_db_c20t")
+     "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
     )}
 
 # Password validation

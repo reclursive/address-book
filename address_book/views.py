@@ -4,6 +4,7 @@ from .forms import ContactForm
 
 
 def address_book_view(request, contact_id=None):
+    contacts = Contact.objects.all().order_by('-big_fan', 'first_name', 'last_name')
     selected_contact = None
     emails = []
 
