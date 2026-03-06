@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wmv$$^q=er&(aukc3=*%5mbwpfdh2f4^+wbuf@ck34fq^m4xr2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", "address-book-2od0.onrender.com"]
 
 # Application definition
 
