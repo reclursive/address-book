@@ -246,9 +246,7 @@ body{
     <div class="contact-circle">{{ contact.first_name|slice:":1" }}{{ contact.last_name|slice:":1" }}</div>
     <div class="contact-name">{{ contact.first_name }} {{ contact.last_name }}</div>
   </a>
-{% empty %}
-    <p>No contacts yet.</p>
-  {% endfor %}
+{% endfor %}
 </div>
 
 
