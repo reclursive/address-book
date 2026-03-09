@@ -5,8 +5,12 @@ class Contact(models.Model):
     last_name = models.CharField(max_length=50)
     big_fan = models.BooleanField(default=False)
 
+    #optional bday 
+    birthday = models.DateField(null=True, blank=True)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
 
 class Email(models.Model):
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name="emails")
