@@ -1,14 +1,54 @@
+# address_book/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Contact, Email
 from .forms import ContactForm
 
-
 def address_book_view(request, contact_id=None):
-    contacts = Contact.objects.all().order_by('-big_fan', 'first_name', 'last_name')
     selected_contact = None
     emails = []
 
-    # Load selected contact if provided
+    # POST reqs
+
+    if request.method == "POST":
+
+        #clear form
+        if "clear_form" in request.POST:
+            return redirect("address_book")
+
+        #save/create 
+        elif "save_contact" in request.POST:
+            selected_contact_instance = None
+            if contact_id:
+                selected_contact_instance = get_object_or_404(Contact, id=contact_id)
+
+            form = ContactForm(request.POST, instance=selected_contact_instance)
+            if form.is_valid():
+                contact = form.save()
+                # Add email if provided
+                email_value = request.POST.get("email")
+                if email_value:
+                    Email.objects.create(contact=contact, email=email_value)
+                return redirect("contact_detail", contact_id=contact.id)
+
+        # add additional email to already established contact
+        elif "add_email" in request.POST:
+            email_value = request.POST.get("email")
+            contact_id_post = request.POST.get("contact_id")
+            if contact_id_post and email_value:
+                contact = get_object_or_404(Contact, id=contact_id_post)
+                Email.objects.create(contact=contact, email=email_value)
+            return redirect("contact_detail", contact_id=contact_id_post)
+
+        # delete contact 
+        elif "delete_contact" in request.POST:
+            contact_id_post = request.POST.get("contact_id")
+            if contact_id_post:
+                contact = get_object_or_404(Contact, id=contact_id_post)
+                contact.delete()
+            return redirect("address_book")
+
+
+ #get reqs
     if contact_id:
         selected_contact = get_object_or_404(Contact, id=contact_id)
         emails = selected_contact.emails.all()
@@ -16,58 +56,12 @@ def address_book_view(request, contact_id=None):
     else:
         form = ContactForm()
 
-    if request.method == "POST":
 
-        # ---- CLEAR FORM ----
-        if "clear_form" in request.POST:
-            return redirect("address_book")  # resets the form and unselects any contact
-        # ---- CLEARING THE FORM COMPLETELY ----
-        if "clear_form" in request.POST:
-            return redirect("address_book")
+    # grabbing contacts for sidebar
+    contacts = Contact.objects.only('id', 'first_name', 'last_name', 'big_fan') \
+                              .order_by('-big_fan', 'first_name', 'last_name')
 
-        # ---- Saving current contact section----
-        elif "save_contact" in request.POST:
-            # Binding form with POST response data
-            # If editing, bind to existing contact instance
-            form = ContactForm(request.POST, instance=selected_contact)
-
-            if form.is_valid():
-                # Saving the contact (creates or updates Contact object)
-                contact = form.save()
-
-                # Checking if an email was entered
-                email_value = request.POST.get("email")
-                if email_value:
-                    # Creating a little email object linked to this contact
-                    Email.objects.create(contact=contact, email=email_value)
-
-                # Redirect to avoid resubmission and go to contact detail page
-                return redirect("contact_detail", contact_id=contact.id)
-
-        # ---- ADDING AN ADDITIONAL EMAIL TO JUST SELECTED CONTACT ----
-        elif "add_email" in request.POST:
-            email_value = request.POST.get("email")
-            contact_id_post = request.POST.get("contact_id")
-
-            if contact_id_post and email_value:
-                contact = get_object_or_404(Contact, id=contact_id_post)
-                Email.objects.create(contact=contact, email=email_value)
-
-            return redirect("contact_detail", contact_id=contact_id_post)
-
-        # ---- DELETING CONTACT ----
-        elif "delete_contact" in request.POST:
-            contact_id_post = request.POST.get("contact_id")
-
-            if contact_id_post:
-                contact = get_object_or_404(Contact, id=contact_id_post)
-                contact.delete()
-
-            return redirect("address_book")
-
-    # Get all contacts for adjacent sidebar
-    contacts = Contact.objects.all().order_by("first_name", "last_name")
-
+    # rendering
     return render(
         request,
         "address_book/address_book.html",
