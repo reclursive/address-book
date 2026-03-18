@@ -1,6 +1,5 @@
 
 from django.db import connection
-print(connection.settings_dict["ENGINE"])
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
