@@ -47,6 +47,17 @@ def address_book_view(request, contact_id=None):
                 contact.delete()
             return redirect("address_book")
 
+        # delete one email
+        
+        elif "delete_email" in request.POST:
+            email_id = request.POST.get("delete_email")
+            contact_id_post = request.POST.get("contact_id")
+
+            if email_id:
+                email = get_object_or_404(Email, id=email_id, contact_id=contact_id_post)
+                email.delete()
+
+            return redirect("contact_detail", contact_id=contact_id_post)
 
  #get reqs
     if contact_id:

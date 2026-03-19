@@ -240,7 +240,31 @@ body{
   background:#f6f6f6;
   font-size:14px;
 }
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* tight spacing between email + X */
+  margin-bottom: 6px;
+}
 
+.email-text {
+  font-size: 12px;
+  color: #666;
+}
+
+.delete-email-btn {
+  border: none;
+  background: transparent;
+  color: #e74c3c;
+  font-size: 10px;   /* smaller X */
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.delete-email-btn:hover {
+  color: #c0392b;
+}
 </style>
 </head>
 
@@ -281,14 +305,23 @@ body{
     {{ form.big_fan }} <label for="{{ form.big_fan.id_for_label }}">Big Fan</label>
 </div>
 
-  <!-- Displaying all contact's existing emails -->
-  <div class="contact-emails">
-    {% for email in emails %}
-      <div>{{ email.email }}</div>
-    {% endfor %}
-  </div>
+  <!-- Displaying all contact's existing emails w added delete-->
+<div class="contact-emails">
+  {% for email in emails %}
+    <div class="email-row">
+      <span class="email-text">{{ email.email }}</span>
 
-  <!-- new email. or optional bday to selected contact-->
+      <button 
+        type="submit" 
+        name="delete_email"
+        value="{{ email.id }}"
+        class="delete-email-btn">
+        ✕
+      </button>
+    </div>
+  {% endfor %}
+</div>
+ <!--- new email. or optional bday to selected contact-->
   <div class="add-email-container">
     <input type="email" name="email" placeholder="New Email">
     {% if selected_contact %}
@@ -296,13 +329,14 @@ body{
       <span class="add-email-label">Add Email</span>
     {% endif %}
   </div>
+
 <div class="birthday-row">
   {{ form.birthday }}
   {% if selected_contact %}
       <button type="submit" name="add_birthday" class="circle-plus"></button>
       <span class="add-email-label">Add Birthday</span>
   {% endif %}
-</div>
+</div> 
 
   <!-- action btns -->
   <div class="action-buttons">
