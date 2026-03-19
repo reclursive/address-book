@@ -305,6 +305,13 @@ body{
     {{ form.big_fan }} <label for="{{ form.big_fan.id_for_label }}">Big Fan</label>
 </div>
 
+<!---bbday-->
+<div class = "birthday-label">
+  {{form.birthday}}
+ <span class="add-email-label">Add Birthday</span>
+
+</div>
+
   <!-- Displaying all contact's existing emails w added delete-->
 <div class="contact-emails">
   {% for email in emails %}
@@ -330,13 +337,7 @@ body{
     {% endif %}
   </div>
 
-<div class="birthday-row">
-  {{ form.birthday }}
-  {% if selected_contact %}
-      <button type="submit" name="add_birthday" class="circle-plus"></button>
-      <span class="add-email-label">Add Birthday</span>
-  {% endif %}
-</div> 
+
 
   <!-- action btns -->
   <div class="action-buttons">
